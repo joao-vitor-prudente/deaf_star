@@ -10,7 +10,7 @@ async function addFriendAction(formData: FormData): Promise<void> {
   await api.friend.add(data);
 }
 
-export default async function AddFriend(
+export default async function AddFriendPage(
   props: PageProps,
 ): Promise<React.JSX.Element> {
   const searchParams = await props.searchParams;

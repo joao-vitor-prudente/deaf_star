@@ -12,7 +12,7 @@ async function createChatAction(formData: FormData): Promise<void> {
   revalidateTRPC("chat.list");
 }
 
-export default function CreateChat(): React.JSX.Element {
+export default function CreateChatPage(): React.JSX.Element {
   return (
     <main className="flex h-screen w-full flex-col items-center justify-center">
       <div className="space-y-12">

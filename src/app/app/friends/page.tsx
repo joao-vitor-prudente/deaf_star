@@ -9,7 +9,7 @@ async function removeFriendAction(formData: FormData): Promise<void> {
   await api.friend.remove(data);
 }
 
-export default async function Friends(): Promise<React.JSX.Element> {
+export default async function FriendsPage(): Promise<React.JSX.Element> {
   const friends = await api.friend.list();
 
   return (

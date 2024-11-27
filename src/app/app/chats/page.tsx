@@ -1,4 +1,4 @@
-export default function Chats(): React.JSX.Element {
+export default function ChatsPage(): React.JSX.Element {
   return (
     <main className="flex h-full w-full items-center justify-center">
       <div className="space-y-4">

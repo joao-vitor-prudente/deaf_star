@@ -12,7 +12,7 @@ async function createMessageAction(formData: FormData): Promise<void> {
   await api.message.create(data);
 }
 
-export default async function Chat(
+export default async function ChatPage(
   props: Readonly<PageProps>,
 ): Promise<React.JSX.Element> {
   const params = await props.params;

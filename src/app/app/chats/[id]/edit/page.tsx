@@ -33,7 +33,7 @@ async function removeChatUserAction(formData: FormData): Promise<void> {
   revalidateTRPC("chat.getById");
 }
 
-export default async function EditChat(
+export default async function EditChatPage(
   props: PageProps,
 ): Promise<React.JSX.Element> {
   const params = await props.params;

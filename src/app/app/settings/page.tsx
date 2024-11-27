@@ -1,4 +1,4 @@
-export default function Settings(): React.JSX.Element {
+export default function SettingsPage(): React.JSX.Element {
   return (
     <main className="flex h-full w-full items-center justify-center">
       <div className="space-y-4">
