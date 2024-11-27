@@ -6,7 +6,6 @@ const config = {
     reactCompiler: true,
     typedRoutes: true,
     typedEnv: true,
-    useLightningcss: true,
   },
 } satisfies NextConfig;
 
