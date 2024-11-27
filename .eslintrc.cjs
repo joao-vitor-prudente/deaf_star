@@ -13,6 +13,7 @@ const config = {
     "plugin:@typescript-eslint/strict-type-checked",
     "plugin:@typescript-eslint/stylistic-type-checked",
     "plugin:jsx-a11y/recommended",
+    "plugin:sonarjs/recommended-legacy",
     "plugin:prettier/recommended",
   ],
   rules: {
