@@ -21,7 +21,7 @@ export const env = createEnv({
   },
 
   client: {
-    // NEXT_PUBLIC_CLIENTVAR: z.string(),
+    NEXT_PUBLIC_TRPC_PATH: z.string().default("/api/trpc"),
   },
 
   runtimeEnv: {
@@ -35,6 +35,7 @@ export const env = createEnv({
     NODE_ENV: process.env.NODE_ENV,
     DELAY_REQUESTS: process.env.DELAY_REQUESTS,
     TRPC_PATH: process.env.TRPC_PATH,
+    NEXT_PUBLIC_TRPC_PATH: process.env.TRPC_PATH,
   },
 
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,
