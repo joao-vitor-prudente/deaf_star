@@ -24,7 +24,7 @@ async function addChatUserAction(formData: FormData): Promise<void> {
   revalidateTRPC("chat.list");
   revalidateTRPC("chat.getById");
   revalidateTRPC("friend.list");
-  revalidateTRPC("user.list")
+  revalidateTRPC("user.list");
 }
 
 async function removeChatUserAction(formData: FormData): Promise<void> {
@@ -33,8 +33,8 @@ async function removeChatUserAction(formData: FormData): Promise<void> {
   await api.chat.removeUser(data);
   revalidateTRPC("chat.list");
   revalidateTRPC("chat.getById");
-    revalidateTRPC("friend.list");
-  revalidateTRPC("user.list")
+  revalidateTRPC("friend.list");
+  revalidateTRPC("user.list");
 }
 
 export default async function EditChatPage(

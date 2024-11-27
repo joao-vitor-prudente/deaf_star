@@ -97,12 +97,8 @@
           "name": "deaf_star_account_user_id_deaf_star_user_id_fk",
           "tableFrom": "deaf_star_account",
           "tableTo": "deaf_star_user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -110,10 +106,7 @@
       "compositePrimaryKeys": {
         "deaf_star_account_provider_provider_account_id_pk": {
           "name": "deaf_star_account_provider_provider_account_id_pk",
-          "columns": [
-            "provider",
-            "provider_account_id"
-          ]
+          "columns": ["provider", "provider_account_id"]
         }
       },
       "uniqueConstraints": {},
@@ -216,12 +209,8 @@
           "name": "deaf_star_chat_user_chat_id_deaf_star_chat_id_fk",
           "tableFrom": "deaf_star_chat_user",
           "tableTo": "deaf_star_chat",
-          "columnsFrom": [
-            "chat_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["chat_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -229,12 +218,8 @@
           "name": "deaf_star_chat_user_user_id_deaf_star_user_id_fk",
           "tableFrom": "deaf_star_chat_user",
           "tableTo": "deaf_star_user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -324,12 +309,8 @@
           "name": "deaf_star_message_chat_id_deaf_star_chat_id_fk",
           "tableFrom": "deaf_star_message",
           "tableTo": "deaf_star_chat",
-          "columnsFrom": [
-            "chat_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["chat_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -337,12 +318,8 @@
           "name": "deaf_star_message_sender_id_deaf_star_user_id_fk",
           "tableFrom": "deaf_star_message",
           "tableTo": "deaf_star_user",
-          "columnsFrom": [
-            "sender_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["sender_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -398,12 +375,8 @@
           "name": "deaf_star_session_user_id_deaf_star_user_id_fk",
           "tableFrom": "deaf_star_session",
           "tableTo": "deaf_star_user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -486,10 +459,7 @@
       "compositePrimaryKeys": {
         "deaf_star_verification_token_identifier_token_pk": {
           "name": "deaf_star_verification_token_identifier_token_pk",
-          "columns": [
-            "identifier",
-            "token"
-          ]
+          "columns": ["identifier", "token"]
         }
       },
       "uniqueConstraints": {},
