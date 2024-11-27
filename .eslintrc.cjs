@@ -6,13 +6,17 @@ const config = {
   },
   plugins: ["@typescript-eslint", "drizzle", "eslint-plugin-react-compiler"],
   extends: [
+    "eslint:recommended",
     "next/core-web-vitals",
+    "next/typescript",
+    "plugin:@next/next/recommended",
     "plugin:@typescript-eslint/strict-type-checked",
     "plugin:@typescript-eslint/stylistic-type-checked",
     "plugin:jsx-a11y/recommended",
     "plugin:prettier/recommended",
   ],
   rules: {
+    "no-console": "error",
     "@typescript-eslint/array-type": "off",
     "@typescript-eslint/consistent-type-definitions": ["error", "type"],
     "@typescript-eslint/explicit-member-accessibility": "error",
