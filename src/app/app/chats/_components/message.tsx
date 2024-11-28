@@ -11,7 +11,7 @@ export async function Message(props: MessageProps): Promise<React.JSX.Element> {
   return (
     <div
       data-is-from-current-user={isFromCurrentUser}
-      className="flex w-full justify-start data-[is-from-current-user]:justify-end"
+      className="flex w-full justify-start data-is-from-current-user:justify-end"
     >
       <div className="min-w-96 rounded-md bg-zinc-900 p-2">
         <div>
