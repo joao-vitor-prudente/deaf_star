@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { SubmitButton } from "~/components/ui/submit-button";
 import { removeFriendSchema } from "~/server/api/routers/friend";
-import { api } from "~/trpc/server";
+import { api, revalidateTRPC } from "~/trpc/server";
 
 async function removeFriendAction(formData: FormData): Promise<void> {
   "use server";
   const data = removeFriendSchema.parse(Object.fromEntries(formData));
   await api.friend.remove(data);
+  revalidateTRPC("friend.list");
+  revalidateTRPC("user.list");
 }
 
 export default async function FriendsPage(): Promise<React.JSX.Element> {

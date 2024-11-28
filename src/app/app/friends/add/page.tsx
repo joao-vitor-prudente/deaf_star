@@ -2,12 +2,14 @@ import { SubmitButton } from "~/components/ui/submit-button";
 import { redirectFormAction } from "~/helpers/redirectFormAction";
 import { addFriendSchema } from "~/server/api/routers/friend";
 import { listUsersSchema } from "~/server/api/routers/user";
-import { api } from "~/trpc/server";
+import { api, revalidateTRPC } from "~/trpc/server";
 
 async function addFriendAction(formData: FormData): Promise<void> {
   "use server";
   const data = addFriendSchema.parse(Object.fromEntries(formData));
   await api.friend.add(data);
+  revalidateTRPC("friend.list");
+  revalidateTRPC("user.list");
 }
 
 export default async function AddFriendPage(
