@@ -1,7 +1,7 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import { type Session } from "next-auth";
 import superjson from "superjson";
-import { ZodError } from "zod";
+import { z, ZodError } from "zod";
 import { env } from "~/env";
 
 import { auth } from "~/server/auth";
@@ -34,7 +34,7 @@ export const createCallerFactory = t.createCallerFactory;
 
 export const createTRPCRouter = t.router;
 
-const timingMiddleware = t.middleware(async ({ next, path }) => {
+const timingMiddleware = t.middleware(async (req) => {
   const start = Date.now();
 
   if (t._config.isDev && env.DELAY_REQUESTS) {
@@ -43,22 +43,35 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
     await new Promise((resolve) => setTimeout(resolve, waitMs));
   }
 
-  const result = await next();
+  const result = await req.next();
 
   const end = Date.now();
-  console.log(`[TRPC] ${path} took ${(end - start).toString()}ms to execute`);
+  const delta = end - start;
+  console.log(`[TRPC] ${req.path} took ${delta.toString()}ms to execute`);
 
   return result;
 });
 
-export const publicProcedure = t.procedure.use(timingMiddleware);
+const protectedMiddleware = t.middleware((req) => {
+  if (!req.ctx.session?.user) throw new TRPCError({ code: "UNAUTHORIZED" });
 
-export const protectedProcedure = t.procedure
-  .use(timingMiddleware)
-  .use(({ ctx, next }) => {
-    if (!ctx.session?.user) throw new TRPCError({ code: "UNAUTHORIZED" });
+  const session = { ...req.ctx.session, user: req.ctx.session.user };
+  return req.next({ ctx: { session } });
+});
 
-    return next({
-      ctx: { session: { ...ctx.session, user: ctx.session.user } },
-    });
-  });
+const userProtectedMiddleware = t.middleware(async (req) => {
+  const input = await req.getRawInput();
+  const parsedInput = z.object({ userId: z.string() }).safeParse(input);
+
+  if (parsedInput.error) throw new TRPCError({ code: "BAD_REQUEST" });
+  if (parsedInput.data.userId !== req.ctx.session?.user.id)
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+
+  return req.next();
+});
+
+export const publicProc = t.procedure.use(timingMiddleware);
+
+export const protectedProc = publicProc.use(protectedMiddleware);
+
+export const userProtectedProc = protectedProc.use(userProtectedMiddleware);

@@ -1,11 +1,12 @@
 import { TRPCError } from "@trpc/server";
 import { and, desc, eq, sql } from "drizzle-orm";
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, protectedProc } from "~/server/api/trpc";
 import {
   type Chat,
   chats,
   chatsUsers,
+  type ChatUser,
   type Message,
   messages,
   type User,
@@ -36,7 +37,7 @@ export const rmChatUserSchema = z.object({
 });
 
 export const chatRouter = createTRPCRouter({
-  create: protectedProcedure.input(createChatSchema).mutation(async (req) => {
+  create: protectedProc.input(createChatSchema).mutation(async (req) => {
     const result = await req.ctx.db
       .insert(chats)
       .values({
@@ -47,7 +48,7 @@ export const chatRouter = createTRPCRouter({
       .returning({ id: chats.id });
 
     const chatId = result.at(0)?.id;
-    if (!chatId) throw new TRPCError({ code: "BAD_REQUEST" });
+    if (!chatId) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
     return await req.ctx.db.insert(chatsUsers).values({
       chatId,
@@ -55,16 +56,13 @@ export const chatRouter = createTRPCRouter({
     });
   }),
 
-  update: protectedProcedure.input(updateChatSchema).mutation(async (req) => {
+  update: protectedProc.input(updateChatSchema).mutation(async (req) => {
     const chat = await req.ctx.db.query.chats.findFirst({
       with: { chatsUsers: true },
       where: (chats, { eq }) => eq(chats.id, req.input.chatId),
     });
-    if (!chat) throw new TRPCError({ code: "BAD_REQUEST" });
-
-    const userId = req.ctx.session.user.id;
-    const isUserInChat = chat.chatsUsers.find((c) => c.userId === userId);
-    if (!isUserInChat) throw new TRPCError({ code: "UNAUTHORIZED" });
+    if (!chat) throw new TRPCError({ code: "NOT_FOUND" });
+    throwIfNotInChat(req.ctx.session.user.id, chat.chatsUsers);
 
     return await req.ctx.db
       .update(chats)
@@ -72,59 +70,52 @@ export const chatRouter = createTRPCRouter({
       .where(eq(chats.id, req.input.chatId));
   }),
 
-  list: protectedProcedure.query(
-    async (req): Promise<ChatWithLastMessage[]> => {
-      const lastMessageSubquery = req.ctx.db
-        .select({
-          chatId: messages.chatId,
-          lastMessage: sql`MAX(${messages.id})`.as("lastMessageId"),
-        })
-        .from(messages)
-        .groupBy(messages.chatId)
-        .as("lastMessageSubquery");
+  list: protectedProc.query(async (req): Promise<ChatWithLastMessage[]> => {
+    const lastMessageSubquery = req.ctx.db
+      .select({
+        chatId: messages.chatId,
+        lastMessage: sql`MAX(${messages.id})`.as("lastMessageId"),
+      })
+      .from(messages)
+      .groupBy(messages.chatId)
+      .as("lastMessageSubquery");
 
-      const chatsResult = await req.ctx.db
-        .select()
-        .from(chats)
-        .innerJoin(chatsUsers, eq(chats.id, chatsUsers.chatId))
-        .leftJoin(lastMessageSubquery, eq(chats.id, lastMessageSubquery.chatId))
-        .leftJoin(messages, eq(lastMessageSubquery.lastMessage, messages.id))
-        .leftJoin(users, eq(messages.senderId, users.id))
-        .where(eq(chatsUsers.userId, req.ctx.session.user.id))
-        .orderBy(desc(messages.updatedAt));
+    const chatsResult = await req.ctx.db
+      .select()
+      .from(chats)
+      .innerJoin(chatsUsers, eq(chats.id, chatsUsers.chatId))
+      .leftJoin(lastMessageSubquery, eq(chats.id, lastMessageSubquery.chatId))
+      .leftJoin(messages, eq(lastMessageSubquery.lastMessage, messages.id))
+      .leftJoin(users, eq(messages.senderId, users.id))
+      .where(eq(chatsUsers.userId, req.ctx.session.user.id))
+      .orderBy(desc(messages.updatedAt));
 
-      return chatsResult.map((data) => {
-        if (!data.message) return data.chat;
-        if (!data.user) return { ...data.chat, lastMessage: data.message };
-        const lastMessage = { ...data.message, sender: data.user };
-        return { ...data.chat, lastMessage };
-      });
-    },
-  ),
+    return chatsResult.map((data) => {
+      if (!data.message) return data.chat;
+      if (!data.user) return { ...data.chat, lastMessage: data.message };
+      const lastMessage = { ...data.message, sender: data.user };
+      return { ...data.chat, lastMessage };
+    });
+  }),
 
-  getById: protectedProcedure.input(getChatByIdSchema).query(async (req) => {
+  getById: protectedProc.input(getChatByIdSchema).query(async (req) => {
     const chat = await req.ctx.db.query.chats.findFirst({
       with: { chatsUsers: true },
       where: (chats, { eq }) => eq(chats.id, req.input.id),
     });
-    if (!chat) throw new TRPCError({ code: "BAD_REQUEST" });
-
-    const userId = req.ctx.session.user.id;
-    const isUserInChat = chat.chatsUsers.find((c) => c.userId === userId);
-    if (!isUserInChat) throw new TRPCError({ code: "UNAUTHORIZED" });
+    if (!chat) throw new TRPCError({ code: "NOT_FOUND" });
+    throwIfNotInChat(req.ctx.session.user.id, chat.chatsUsers);
 
     return chat;
   }),
 
-  addUser: protectedProcedure.input(addChatUserSchema).query(async (req) => {
+  addUser: protectedProc.input(addChatUserSchema).query(async (req) => {
     const chat = await req.ctx.db.query.chats.findFirst({
       with: { chatsUsers: true },
       where: (chats, { eq }) => eq(chats.id, req.input.chatId),
     });
-    if (!chat) throw new TRPCError({ code: "BAD_REQUEST" });
-
-    if (!chat.chatsUsers.find((c) => c.userId === req.ctx.session.user.id))
-      throw new TRPCError({ code: "UNAUTHORIZED" });
+    if (!chat) throw new TRPCError({ code: "NOT_FOUND" });
+    throwIfNotInChat(req.ctx.session.user.id, chat.chatsUsers);
 
     return await req.ctx.db.insert(chatsUsers).values({
       chatId: req.input.chatId,
@@ -132,15 +123,13 @@ export const chatRouter = createTRPCRouter({
     });
   }),
 
-  removeUser: protectedProcedure.input(rmChatUserSchema).query(async (req) => {
+  removeUser: protectedProc.input(rmChatUserSchema).query(async (req) => {
     const chat = await req.ctx.db.query.chats.findFirst({
       with: { chatsUsers: true },
       where: (chats, { eq }) => eq(chats.id, req.input.chatId),
     });
-    if (!chat) throw new TRPCError({ code: "BAD_REQUEST" });
-
-    if (!chat.chatsUsers.find((c) => c.userId === req.ctx.session.user.id))
-      throw new TRPCError({ code: "UNAUTHORIZED" });
+    if (!chat) throw new TRPCError({ code: "NOT_FOUND" });
+    throwIfNotInChat(req.ctx.session.user.id, chat.chatsUsers);
 
     return await req.ctx.db
       .delete(chatsUsers)
@@ -156,3 +145,8 @@ export const chatRouter = createTRPCRouter({
 export type ChatWithLastMessage = Chat & {
   lastMessage?: Message & { sender?: User };
 };
+
+function throwIfNotInChat(userId: string, chatsUsers: ChatUser[]): void {
+  const isUserInChat = chatsUsers.find((c) => c.userId === userId);
+  if (!isUserInChat) throw new TRPCError({ code: "UNAUTHORIZED" });
+}

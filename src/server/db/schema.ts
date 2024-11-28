@@ -83,6 +83,8 @@ export const chatsUsers = createTable(
   ],
 );
 
+export type ChatUser = typeof chatsUsers.$inferSelect;
+
 export const chatsUsersRelations = relations(chatsUsers, ({ one }) => ({
   chat: one(chats, { fields: [chatsUsers.chatId], references: [chats.id] }),
   user: one(users, { fields: [chatsUsers.userId], references: [users.id] }),

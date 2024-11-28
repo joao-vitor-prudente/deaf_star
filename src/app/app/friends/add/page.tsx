@@ -1,5 +1,5 @@
 import { SubmitButton } from "~/components/ui/submit-button";
-import { redirectFormAction } from "~/helpers/redirectFormAction";
+import { redirectFormAction } from "~/helpers/redirect-form-action";
 import { addFriendSchema } from "~/server/api/routers/friend";
 import { listUsersSchema } from "~/server/api/routers/user";
 import { api, revalidateTRPC } from "~/trpc/server";

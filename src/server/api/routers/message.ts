@@ -1,7 +1,7 @@
 import { desc } from "drizzle-orm";
 import { type User } from "next-auth";
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, protectedProc } from "~/server/api/trpc";
 import { type Message, messages } from "~/server/db/schema";
 
 export const listMsgSchema = z.object({ chatId: z.number() });
@@ -12,7 +12,7 @@ export const createMsgSchema = z.object({
 });
 
 export const messageRouter = createTRPCRouter({
-  list: protectedProcedure
+  list: protectedProc
     .input(listMsgSchema)
     .query(async (req): Promise<MessageWithSender[]> => {
       return await req.ctx.db.query.messages.findMany({
@@ -22,7 +22,7 @@ export const messageRouter = createTRPCRouter({
       });
     }),
 
-  create: protectedProcedure.input(createMsgSchema).mutation(async (req) => {
+  create: protectedProc.input(createMsgSchema).mutation(async (req) => {
     return await req.ctx.db.insert(messages).values({
       chatId: req.input.chatId,
       text: req.input.text,
