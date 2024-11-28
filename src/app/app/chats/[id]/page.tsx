@@ -10,7 +10,7 @@ async function createMessageAction(formData: FormData): Promise<void> {
   "use server";
   const data = createMsgSchema.parse(Object.fromEntries(formData));
   await api.message.create(data);
-  revalidateTRPC("message.list")
+  revalidateTRPC("message.list");
 }
 
 export default async function ChatPage(

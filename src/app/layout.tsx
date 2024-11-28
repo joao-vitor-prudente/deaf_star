@@ -27,7 +27,7 @@ export default function RootLayout(props: RootLayoutProps): React.JSX.Element {
             enableSystem
             disableTransitionOnChange
           >
-            <aside className="absolute right-4 top-4">
+            <aside className="absolute top-4 right-4">
               <ModeToggle />
             </aside>
             {props.children}
