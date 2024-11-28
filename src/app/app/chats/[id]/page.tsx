@@ -1,15 +1,16 @@
+import Link from "next/link";
 import { SubmitButton } from "~/components/ui/submit-button";
 import { Textarea } from "~/components/ui/textarea";
 import { getChatByIdSchema } from "~/server/api/routers/chat";
 import { createMsgSchema } from "~/server/api/routers/message";
-import { api } from "~/trpc/server";
+import { api, revalidateTRPC } from "~/trpc/server";
 import { Message } from "../_components/message";
-import Link from "next/link";
 
 async function createMessageAction(formData: FormData): Promise<void> {
   "use server";
   const data = createMsgSchema.parse(Object.fromEntries(formData));
   await api.message.create(data);
+  revalidateTRPC("message.list")
 }
 
 export default async function ChatPage(
