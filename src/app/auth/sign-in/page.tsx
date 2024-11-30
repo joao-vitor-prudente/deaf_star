@@ -15,7 +15,7 @@ export default function SignInPage(): React.JSX.Element {
         <h2 className="text-3xl">Sign In</h2>
       </header>
       <form className="flex w-96 flex-col gap-6" action={signInAction}>
-        <Label htmlFor="email" className="flex flex-col gap-2">
+        <Label htmlFor="email" className="space-y-2">
           <span>E-mail</span>
           <Input type="email" id="email" name="email" autoComplete="email" />
         </Label>
