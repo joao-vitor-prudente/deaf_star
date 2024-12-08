@@ -1,9 +1,5 @@
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import {
-  type DefaultSession,
-  type NextAuthConfig,
-  type Session,
-} from "next-auth";
+import { type NextAuthConfig, type Session } from "next-auth";
 import NodeMailerProvider from "next-auth/providers/nodemailer";
 import { db } from "~/server/db";
 import {
@@ -12,13 +8,6 @@ import {
   users,
   verificationTokens,
 } from "~/server/db/schema";
-
-declare module "next-auth" {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-  interface Session extends DefaultSession {
-    user: { id: string } & DefaultSession["user"];
-  }
-}
 
 export const authConfig = {
   trustHost: true,
