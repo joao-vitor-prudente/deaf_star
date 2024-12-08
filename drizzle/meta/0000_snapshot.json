@@ -1,5 +1,5 @@
 {
-  "id": "1ab8a68b-4138-49b2-83d2-8a486db49a58",
+  "id": "037a5da4-77cd-4b9c-999d-e62c4a665d1f",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -97,8 +97,12 @@
           "name": "deaf_star_account_user_id_deaf_star_user_id_fk",
           "tableFrom": "deaf_star_account",
           "tableTo": "deaf_star_user",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -106,7 +110,10 @@
       "compositePrimaryKeys": {
         "deaf_star_account_provider_provider_account_id_pk": {
           "name": "deaf_star_account_provider_provider_account_id_pk",
-          "columns": ["provider", "provider_account_id"]
+          "columns": [
+            "provider",
+            "provider_account_id"
+          ]
         }
       },
       "uniqueConstraints": {},
@@ -114,64 +121,14 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.deaf_star_chat": {
-      "name": "deaf_star_chat",
+    "public.deaf_star_friendship": {
+      "name": "deaf_star_friendship",
       "schema": "",
       "columns": {
         "id": {
           "name": "id",
           "type": "serial",
           "primaryKey": true,
-          "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.deaf_star_chat_user": {
-      "name": "deaf_star_chat_user",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "chat_id": {
-          "name": "chat_id",
-          "type": "integer",
-          "primaryKey": false,
           "notNull": true
         },
         "user_id": {
@@ -179,20 +136,26 @@
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
+        },
+        "friend_id": {
+          "name": "friend_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {
-        "chat_user_chat_id_user_id_idx": {
-          "name": "chat_user_chat_id_user_id_idx",
+        "friendship_user_id_friend_id_idx": {
+          "name": "friendship_user_id_friend_id_idx",
           "columns": [
             {
-              "expression": "chat_id",
+              "expression": "user_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
             },
             {
-              "expression": "user_id",
+              "expression": "friend_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -205,21 +168,29 @@
         }
       },
       "foreignKeys": {
-        "deaf_star_chat_user_chat_id_deaf_star_chat_id_fk": {
-          "name": "deaf_star_chat_user_chat_id_deaf_star_chat_id_fk",
-          "tableFrom": "deaf_star_chat_user",
-          "tableTo": "deaf_star_chat",
-          "columnsFrom": ["chat_id"],
-          "columnsTo": ["id"],
+        "deaf_star_friendship_user_id_deaf_star_user_id_fk": {
+          "name": "deaf_star_friendship_user_id_deaf_star_user_id_fk",
+          "tableFrom": "deaf_star_friendship",
+          "tableTo": "deaf_star_user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "deaf_star_chat_user_user_id_deaf_star_user_id_fk": {
-          "name": "deaf_star_chat_user_user_id_deaf_star_user_id_fk",
-          "tableFrom": "deaf_star_chat_user",
+        "deaf_star_friendship_friend_id_deaf_star_user_id_fk": {
+          "name": "deaf_star_friendship_friend_id_deaf_star_user_id_fk",
+          "tableFrom": "deaf_star_friendship",
           "tableTo": "deaf_star_user",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "friend_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -230,8 +201,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.deaf_star_message": {
-      "name": "deaf_star_message",
+    "public.deaf_star_replies": {
+      "name": "deaf_star_replies",
       "schema": "",
       "columns": {
         "id": {
@@ -253,73 +224,44 @@
           "primaryKey": false,
           "notNull": true
         },
-        "chat_id": {
-          "name": "chat_id",
+        "thread_id": {
+          "name": "thread_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
-        "text": {
-          "name": "text",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "sender_id": {
-          "name": "sender_id",
-          "type": "varchar(255)",
+        "reply_id": {
+          "name": "reply_id",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         }
       },
-      "indexes": {
-        "message_chat_id_idx": {
-          "name": "message_chat_id_idx",
-          "columns": [
-            {
-              "expression": "chat_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "message_sender_id_idx": {
-          "name": "message_sender_id_idx",
-          "columns": [
-            {
-              "expression": "sender_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
+      "indexes": {},
       "foreignKeys": {
-        "deaf_star_message_chat_id_deaf_star_chat_id_fk": {
-          "name": "deaf_star_message_chat_id_deaf_star_chat_id_fk",
-          "tableFrom": "deaf_star_message",
-          "tableTo": "deaf_star_chat",
-          "columnsFrom": ["chat_id"],
-          "columnsTo": ["id"],
+        "deaf_star_replies_thread_id_deaf_star_thread_id_fk": {
+          "name": "deaf_star_replies_thread_id_deaf_star_thread_id_fk",
+          "tableFrom": "deaf_star_replies",
+          "tableTo": "deaf_star_thread",
+          "columnsFrom": [
+            "thread_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "deaf_star_message_sender_id_deaf_star_user_id_fk": {
-          "name": "deaf_star_message_sender_id_deaf_star_user_id_fk",
-          "tableFrom": "deaf_star_message",
-          "tableTo": "deaf_star_user",
-          "columnsFrom": ["sender_id"],
-          "columnsTo": ["id"],
+        "deaf_star_replies_reply_id_deaf_star_thread_id_fk": {
+          "name": "deaf_star_replies_reply_id_deaf_star_thread_id_fk",
+          "tableFrom": "deaf_star_replies",
+          "tableTo": "deaf_star_thread",
+          "columnsFrom": [
+            "reply_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -375,8 +317,70 @@
           "name": "deaf_star_session_user_id_deaf_star_user_id_fk",
           "tableFrom": "deaf_star_session",
           "tableTo": "deaf_star_user",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.deaf_star_thread": {
+      "name": "deaf_star_thread",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "text": {
+          "name": "text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "author_id": {
+          "name": "author_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "deaf_star_thread_author_id_deaf_star_user_id_fk": {
+          "name": "deaf_star_thread_author_id_deaf_star_user_id_fk",
+          "tableFrom": "deaf_star_thread",
+          "tableTo": "deaf_star_user",
+          "columnsFrom": [
+            "author_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -459,7 +463,10 @@
       "compositePrimaryKeys": {
         "deaf_star_verification_token_identifier_token_pk": {
           "name": "deaf_star_verification_token_identifier_token_pk",
-          "columns": ["identifier", "token"]
+          "columns": [
+            "identifier",
+            "token"
+          ]
         }
       },
       "uniqueConstraints": {},

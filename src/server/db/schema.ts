@@ -25,69 +25,48 @@ const commonColumns = {
   }).notNull(),
 };
 
-export const messages = createTable(
-  "message",
+export const threads = createTable(
+  "thread",
   {
     ...commonColumns,
-    chatId: integer("chat_id")
-      .notNull()
-      .references(() => chats.id),
     text: text("text").notNull(),
-    senderId: varchar("sender_id", { length: 255 })
+    authorId: varchar("author_id", { length: 255 })
       .notNull()
       .references(() => users.id),
   },
-  (table) => [
-    index("message_chat_id_idx").on(table.chatId),
-    index("message_sender_id_idx").on(table.senderId),
-    foreignKey({ columns: [table.chatId], foreignColumns: [chats.id] }),
-    foreignKey({ columns: [table.senderId], foreignColumns: [users.id] }),
+  (thread) => [
+    foreignKey({ columns: [thread.authorId], foreignColumns: [users.id] }),
   ],
 );
 
-export type Message = typeof messages.$inferSelect;
-
-export const messagesRelations = relations(messages, ({ one }) => ({
-  chat: one(chats, { fields: [messages.chatId], references: [chats.id] }),
-  sender: one(users, { fields: [messages.senderId], references: [users.id] }),
+export const threadRelations = relations(threads, ({ one, many }) => ({
+  author: one(users, { fields: [threads.authorId], references: [users.id] }),
+  replies: many(threads),
 }));
 
-export const chats = createTable("chat", {
-  ...commonColumns,
-  name: varchar("name", { length: 255 }).notNull(),
-  description: text("description"),
-});
-
-export type Chat = typeof chats.$inferSelect;
-
-export const chatsRelations = relations(chats, ({ many }) => ({
-  chatsUsers: many(chatsUsers),
-  messages: many(messages),
-}));
-
-export const chatsUsers = createTable(
-  "chat_user",
+export const replies = createTable(
+  "replies",
   {
-    id: serial("id").primaryKey().notNull(),
-    chatId: integer("chat_id")
+    ...commonColumns,
+    threadId: integer("thread_id")
       .notNull()
-      .references(() => chats.id),
-    userId: varchar("user_id", { length: 255 })
+      .references(() => threads.id),
+    replyId: integer("reply_id")
       .notNull()
-      .references(() => users.id),
+      .references(() => threads.id),
   },
-  (table) => [
-    index("chat_user_chat_id_user_id_idx").on(table.chatId, table.userId),
-    foreignKey({ columns: [table.chatId], foreignColumns: [chats.id] }),
-    foreignKey({ columns: [table.userId], foreignColumns: [users.id] }),
+  (thread) => [
+    foreignKey({ columns: [thread.threadId], foreignColumns: [threads.id] }),
+    foreignKey({ columns: [thread.replyId], foreignColumns: [threads.id] }),
   ],
 );
 
-export type ChatUser = typeof chatsUsers.$inferSelect;
-
-export const chatsUsersRelations = relations(chatsUsers, ({ one }) => ({
-  chat: one(chats, { fields: [chatsUsers.chatId], references: [chats.id] }),
-  user: one(users, { fields: [chatsUsers.userId], references: [users.id] }),
+export const threadThreeRelations = relations(replies, ({ one }) => ({
+  thread: one(threads, {
+    fields: [replies.threadId],
+    references: [threads.id],
+  }),
+  reply: one(threads, { fields: [replies.replyId], references: [threads.id] }),
 }));
 
 export const users = createTable("user", {
@@ -108,8 +87,7 @@ export type User = typeof users.$inferSelect;
 
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
-  chatsUsers: many(chatsUsers),
-  messages: many(messages),
+  threads: many(threads),
   friends: many(friendships),
 }));
 

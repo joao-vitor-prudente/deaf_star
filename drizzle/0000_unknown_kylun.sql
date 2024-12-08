@@ -13,33 +13,32 @@ CREATE TABLE IF NOT EXISTS "deaf_star_account" (
 	CONSTRAINT "deaf_star_account_provider_provider_account_id_pk" PRIMARY KEY("provider","provider_account_id")
 );
 --> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "deaf_star_chat" (
+CREATE TABLE IF NOT EXISTS "deaf_star_friendship" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"user_id" varchar(255) NOT NULL,
+	"friend_id" varchar(255) NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "deaf_star_replies" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone NOT NULL,
-	"name" varchar(255) NOT NULL,
-	"description" text
-);
---> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "deaf_star_chat_user" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"chat_id" integer NOT NULL,
-	"user_id" varchar(255) NOT NULL
-);
---> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "deaf_star_message" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_at" timestamp with time zone NOT NULL,
-	"chat_id" integer NOT NULL,
-	"text" text NOT NULL,
-	"sender_id" varchar(255) NOT NULL
+	"thread_id" integer NOT NULL,
+	"reply_id" integer NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "deaf_star_session" (
 	"session_token" varchar(255) PRIMARY KEY NOT NULL,
 	"user_id" varchar(255) NOT NULL,
 	"expires" timestamp with time zone NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "deaf_star_thread" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"updated_at" timestamp with time zone NOT NULL,
+	"text" text NOT NULL,
+	"author_id" varchar(255) NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "deaf_star_user" (
@@ -64,25 +63,25 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "deaf_star_chat_user" ADD CONSTRAINT "deaf_star_chat_user_chat_id_deaf_star_chat_id_fk" FOREIGN KEY ("chat_id") REFERENCES "public"."deaf_star_chat"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "deaf_star_friendship" ADD CONSTRAINT "deaf_star_friendship_user_id_deaf_star_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."deaf_star_user"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "deaf_star_chat_user" ADD CONSTRAINT "deaf_star_chat_user_user_id_deaf_star_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."deaf_star_user"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "deaf_star_friendship" ADD CONSTRAINT "deaf_star_friendship_friend_id_deaf_star_user_id_fk" FOREIGN KEY ("friend_id") REFERENCES "public"."deaf_star_user"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "deaf_star_message" ADD CONSTRAINT "deaf_star_message_chat_id_deaf_star_chat_id_fk" FOREIGN KEY ("chat_id") REFERENCES "public"."deaf_star_chat"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "deaf_star_replies" ADD CONSTRAINT "deaf_star_replies_thread_id_deaf_star_thread_id_fk" FOREIGN KEY ("thread_id") REFERENCES "public"."deaf_star_thread"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "deaf_star_message" ADD CONSTRAINT "deaf_star_message_sender_id_deaf_star_user_id_fk" FOREIGN KEY ("sender_id") REFERENCES "public"."deaf_star_user"("id") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "deaf_star_replies" ADD CONSTRAINT "deaf_star_replies_reply_id_deaf_star_thread_id_fk" FOREIGN KEY ("reply_id") REFERENCES "public"."deaf_star_thread"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -93,8 +92,12 @@ EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "deaf_star_thread" ADD CONSTRAINT "deaf_star_thread_author_id_deaf_star_user_id_fk" FOREIGN KEY ("author_id") REFERENCES "public"."deaf_star_user"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "account_user_id_idx" ON "deaf_star_account" USING btree ("user_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "chat_user_chat_id_user_id_idx" ON "deaf_star_chat_user" USING btree ("chat_id","user_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "message_chat_id_idx" ON "deaf_star_message" USING btree ("chat_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "message_sender_id_idx" ON "deaf_star_message" USING btree ("sender_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "friendship_user_id_friend_id_idx" ON "deaf_star_friendship" USING btree ("user_id","friend_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "session_user_id_idx" ON "deaf_star_session" USING btree ("user_id");
