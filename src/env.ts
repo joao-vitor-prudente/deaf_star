@@ -21,6 +21,8 @@ export const env = createEnv({
   },
 
   client: {
+    NEXT_PUBLIC_HTTP_URL: z.string().default("http://localhost:3000"),
+    NEXT_PUBLIC_WS_URL: z.string().default("ws://localhost:3000"),
     NEXT_PUBLIC_TRPC_PATH: z.string().default("/api/trpc"),
   },
 
@@ -35,6 +37,8 @@ export const env = createEnv({
     NODE_ENV: process.env.NODE_ENV,
     DELAY_REQUESTS: process.env.DELAY_REQUESTS,
     TRPC_PATH: process.env.TRPC_PATH,
+    NEXT_PUBLIC_HTTP_URL: process.env.HTTP_URL,
+    NEXT_PUBLIC_WS_URL: process.env.WS_URL,
     NEXT_PUBLIC_TRPC_PATH: process.env.TRPC_PATH,
   },
 
