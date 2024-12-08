@@ -50,10 +50,11 @@ export const chatRouter = createTRPCRouter({
     const chatId = result.at(0)?.id;
     if (!chatId) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
-    return await req.ctx.db.insert(chatsUsers).values({
+    await req.ctx.db.insert(chatsUsers).values({
       chatId,
       userId: req.ctx.session.user.id,
     });
+    return chatId;
   }),
 
   update: protectedProc.input(updateChatSchema).mutation(async (req) => {

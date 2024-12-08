@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { SubmitButton } from "~/components/ui/submit-button";
@@ -8,8 +9,9 @@ import { api, revalidateTRPC } from "~/trpc/server";
 async function createChatAction(formData: FormData): Promise<void> {
   "use server";
   const data = createChatSchema.parse(Object.fromEntries(formData));
-  await api.chat.create(data);
+  const chatId = await api.chat.create(data);
   revalidateTRPC("chat.list");
+  redirect(`/app/chats/${chatId}`);
 }
 
 export default function CreateChatPage(): React.JSX.Element {
