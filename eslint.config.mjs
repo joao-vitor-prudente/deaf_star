@@ -1,27 +1,27 @@
 // @ts-check
 
-import eslintJs from "@eslint/js";
-import eslintConfigNext from "@next/eslint-plugin-next";
-import * as eslintPluginDrizzle from "eslint-plugin-drizzle";
-import eslintPluginJsxA11y from "eslint-plugin-jsx-a11y";
-import eslintPluginPrettier from "eslint-plugin-prettier/recommended";
-import eslintPluginReact from "eslint-plugin-react";
-import eslintPluginReactCompiler from "eslint-plugin-react-compiler";
-import eslintPluginReactHooks from "eslint-plugin-react-hooks";
-import eslintPluginSonarJs from "eslint-plugin-sonarjs";
-import typescriptEslint from "typescript-eslint";
+import js from "@eslint/js";
+import next from "@next/eslint-plugin-next";
+import * as drizzle from "eslint-plugin-drizzle";
+import a11y from "eslint-plugin-jsx-a11y";
+import prettier from "eslint-plugin-prettier/recommended";
+import react from "eslint-plugin-react";
+import reactCompiler from "eslint-plugin-react-compiler";
+import reactHooks from "eslint-plugin-react-hooks";
+import sonar from "eslint-plugin-sonarjs";
+import typescript from "typescript-eslint";
 
-export default typescriptEslint.config(
-  eslintJs.configs.recommended,
-  typescriptEslint.configs.strictTypeChecked,
-  typescriptEslint.configs.stylisticTypeChecked,
-  eslintPluginJsxA11y.flatConfigs.recommended,
-  eslintPluginSonarJs.configs.recommended,
+export default typescript.config(
+  js.configs.recommended,
+  typescript.configs.strictTypeChecked,
+  typescript.configs.stylisticTypeChecked,
+  a11y.flatConfigs.recommended,
+  sonar.configs.recommended,
   // @ts-expect-error pourly typed config
-  eslintPluginReact.configs.flat.recommended,
+  react.configs.flat.recommended,
   // @ts-expect-error pourly typed config
-  eslintPluginReact.configs.flat["jsx-runtime"],
-  eslintPluginPrettier,
+  react.configs.flat["jsx-runtime"],
+  prettier,
   {
     languageOptions: {
       parserOptions: {
@@ -56,24 +56,24 @@ export default typescriptEslint.config(
   },
   {
     files: ["**/*.mjs", "**/*.js"],
-    extends: [typescriptEslint.configs.disableTypeChecked],
+    extends: [typescript.configs.disableTypeChecked],
   },
   {
     settings: { react: { version: "detect" } },
     rules: { "react/prop-types": "off" },
   },
   {
-    plugins: { "react-compiler": eslintPluginReactCompiler },
+    plugins: { "react-compiler": reactCompiler },
     rules: { "react-compiler/react-compiler": "error" },
   },
   {
-    plugins: { "react-hooks": eslintPluginReactHooks },
-    rules: eslintPluginReactHooks.configs.recommended.rules,
+    plugins: { "react-hooks": reactHooks },
+    rules: reactHooks.configs.recommended.rules,
   },
   {
-    plugins: { drizzle: eslintPluginDrizzle },
+    plugins: { drizzle: drizzle },
     rules: {
-      ...eslintPluginDrizzle.configs.recommended.rules,
+      ...drizzle.configs.recommended.rules,
       "drizzle/enforce-delete-with-where": [
         "error",
         { drizzleObjectName: ["db", "ctx.db"] },
@@ -87,11 +87,11 @@ export default typescriptEslint.config(
   {
     files: ["**/*.ts", "**/*.tsx"],
     plugins: {
-      "@next/next": eslintConfigNext,
+      "@next/next": next,
     },
     rules: {
-      ...eslintConfigNext.configs.recommended.rules,
-      ...eslintConfigNext.configs["core-web-vitals"].rules,
+      ...next.configs.recommended.rules,
+      ...next.configs["core-web-vitals"].rules,
     },
   },
 );
