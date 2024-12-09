@@ -1,22 +1,14 @@
-import Link from "next/link";
+import { Home, Search, User } from "lucide-react";
 import { redirect } from "next/navigation";
+import { ModeToggle } from "~/components/ui/mode-toggle";
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarProvider,
-  SidebarTrigger,
-} from "~/components/ui/sidebar";
-import { SubmitButton } from "~/components/ui/submit-button";
-import { auth, signOut } from "~/server/auth";
-import { api } from "~/trpc/server";
-import { ChatLink } from "./_components/chat-link";
-
-async function signOutAction(): Promise<void> {
-  "use server";
-  await signOut();
-}
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  navigationMenuTriggerStyle,
+} from "~/components/ui/navigation-menu";
+import { auth } from "~/server/auth";
 
 type ChatsLayoutProps = Readonly<{ children: React.ReactNode }>;
 
@@ -26,49 +18,51 @@ export default async function ChatsLayout(
   const session = await auth();
   if (!session) return redirect("/auth/sign-in");
 
-  const chats = await api.chat.list();
-
   return (
-    <div>
-      <SidebarProvider>
-        <Sidebar>
-          <SidebarHeader>
-            <nav>
-              <ul>
-                <li>
-                  <Link href="/app/friends">Friends</Link>
-                </li>
-                <li>
-                  <Link href="/app/chats/create">Create Chat</Link>
-                </li>
-              </ul>
-            </nav>
-          </SidebarHeader>
-          <SidebarContent>
-            <ul className="space-y-4 p-2">
-              {chats.map((chat) => (
-                <li key={chat.id}>
-                  <ChatLink chat={chat} />
-                </li>
-              ))}
-            </ul>
-          </SidebarContent>
-          <SidebarFooter>
-            <div className="flex items-center gap-4 p-2">
-              <form action={signOutAction}>
-                <SubmitButton>Sign Out</SubmitButton>
-              </form>
-              <Link href="/app/settings">Settings</Link>
-            </div>
-          </SidebarFooter>
-        </Sidebar>
-        <div className="relative h-screen w-full">
-          <div className="absolute">
-            <SidebarTrigger />
-          </div>
-          {props.children}
+    <div className="flex h-screen flex-col divide-y divide-primary-foreground">
+      <header>
+        <NavigationMenu>
+          <NavigationMenuList className="p-4">
+            <NavigationMenuItem>
+              <NavigationMenuLink
+                href="/app/home"
+                className={navigationMenuTriggerStyle()}
+              >
+                <div className="flex items-center gap-2">
+                  <Home />
+                  <span>Home</span>
+                </div>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuLink
+                href="/app/search"
+                className={navigationMenuTriggerStyle()}
+              >
+                <div className="flex items-center gap-2">
+                  <Search />
+                  <span>Search</span>
+                </div>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuLink
+                href={`/app/profile/${session.user.id}`}
+                className={navigationMenuTriggerStyle()}
+              >
+                <div className="flex items-center gap-2">
+                  <User />
+                  <span>Profile</span>
+                </div>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
+        <div className="fixed right-4 top-4">
+          <ModeToggle />
         </div>
-      </SidebarProvider>
+      </header>
+      <div className="flex-1">{props.children}</div>
     </div>
   );
 }
