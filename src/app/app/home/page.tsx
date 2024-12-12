@@ -1,3 +1,3 @@
-export default function HomePage(): React.JSX.Element {
+export default function HomePage(): ReactNode {
   return <main>Home</main>;
 }

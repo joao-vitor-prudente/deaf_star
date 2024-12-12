@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { Button } from "~/components/ui/button";
 
-export default function ErrorPage(props: ErrorPageProps): React.JSX.Element {
+export default function ErrorPage(props: ErrorPageProps): ReactNode {
   if (props.error.message === "UNAUTHORIZED") return redirect("/auth/sign-in");
 
   return (

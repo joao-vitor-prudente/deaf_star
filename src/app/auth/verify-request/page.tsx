@@ -1,4 +1,4 @@
-export default function VerifyRequestPage(): React.JSX.Element {
+export default function VerifyRequestPage(): ReactNode {
   return (
     <main className="flex h-screen items-center justify-center">
       <section className="w-96 space-y-4">

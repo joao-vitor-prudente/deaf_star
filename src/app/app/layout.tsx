@@ -10,11 +10,7 @@ import {
 } from "~/components/ui/navigation-menu";
 import { auth } from "~/helpers/auth";
 
-type ChatsLayoutProps = Readonly<{ children: React.ReactNode }>;
-
-export default async function ChatsLayout(
-  props: ChatsLayoutProps,
-): AsyncReactNode {
+export default async function ChatsLayout(props: LayoutProps): AsyncReactNode {
   const session = await auth();
 
   return (

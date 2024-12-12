@@ -13,3 +13,5 @@ type LayoutProps = Readonly<{
 }>;
 
 type AsyncReactNode = Promise<Awaited<React.ReactNode>>;
+
+type ReactNode = React.JSX.Element;

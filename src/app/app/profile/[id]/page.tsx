@@ -1,3 +1,3 @@
-export default function ProfilePage(): React.JSX.Element {
+export default function ProfilePage(): ReactNode {
   return <main>Profile</main>;
 }

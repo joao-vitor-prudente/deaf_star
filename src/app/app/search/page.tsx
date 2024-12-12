@@ -5,9 +5,7 @@ import { listUsersSchema } from "~/server/api/routers/user";
 import { api } from "~/trpc/server";
 import { UserCard } from "./_components/user-card";
 
-export default async function SearchPage(
-  props: PageProps,
-): Promise<React.JSX.Element> {
+export default async function SearchPage(props: PageProps): AsyncReactNode {
   const searchParams = await props.searchParams;
   const searchString = listUsersSchema.parse(searchParams).searchString;
   const users = await api.user.list({ searchString });

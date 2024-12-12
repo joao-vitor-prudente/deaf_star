@@ -2,7 +2,7 @@ import { Input } from "~/components/ui/input";
 import { Skeleton } from "~/components/ui/skeleton";
 import { SubmitButton } from "~/components/ui/submit-button";
 
-export default function SearchLoading(): React.JSX.Element {
+export default function SearchLoading(): ReactNode {
   return (
     <main className="flex max-w-md flex-col gap-4 p-4">
       <form className="flex gap-4">

@@ -8,7 +8,7 @@ async function signInAction(formData: FormData): Promise<void> {
   await signIn("nodemailer", formData);
 }
 
-export default function SignInPage(): React.JSX.Element {
+export default function SignInPage(): ReactNode {
   return (
     <main className="m-auto flex h-screen w-min flex-col justify-center gap-12">
       <header>
