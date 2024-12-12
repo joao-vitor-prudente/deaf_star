@@ -1,11 +1,3 @@
-import { redirect } from "next/navigation";
-import { auth } from "~/server/auth";
+import { AuthGuard } from "~/app/_components/guards";
 
-export default async function AuthLayout(
-  props: LayoutProps,
-): Promise<React.ReactNode> {
-  const session = await auth();
-  if (session) return redirect("/app/home");
-
-  return props.children;
-}
+export default AuthGuard;

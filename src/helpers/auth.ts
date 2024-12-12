@@ -1,8 +1,8 @@
 import { type Session } from "next-auth";
 import { redirect } from "next/navigation";
-import { auth } from "~/server/auth";
+import { auth as _auth } from "~/server/auth";
 
-export async function getSessionOrRedirect(): Promise<Session> {
-  const session = await auth();
+export async function auth(): Promise<Session> {
+  const session = await _auth();
   return session ?? redirect("/auth/sign-in");
 }

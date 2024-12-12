@@ -9,5 +9,7 @@ type ErrorPageProps = Readonly<{
 }>;
 
 type LayoutProps = Readonly<{
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }>;
+
+type AsyncReactNode = Promise<Awaited<React.ReactNode>>;
