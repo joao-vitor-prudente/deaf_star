@@ -81,6 +81,7 @@ export const users = createTable("user", {
     withTimezone: true,
   }).default(sql`CURRENT_TIMESTAMP`),
   image: varchar("image", { length: 255 }),
+  bio: varchar("bio", { length: 255 }),
 });
 
 export type User = typeof users.$inferSelect;

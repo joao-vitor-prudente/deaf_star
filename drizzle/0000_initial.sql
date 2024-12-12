@@ -46,7 +46,8 @@ CREATE TABLE IF NOT EXISTS "deaf_star_user" (
 	"name" varchar(255),
 	"email" varchar(255) NOT NULL,
 	"email_verified" timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
-	"image" varchar(255)
+	"image" varchar(255),
+	"bio" varchar(255)
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "deaf_star_verification_token" (
