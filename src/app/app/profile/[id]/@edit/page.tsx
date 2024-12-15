@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { ProfileImage } from "~/app/_components/profile-image";
+import { ProfileImage } from "~/app/app/_components/profile-image";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";

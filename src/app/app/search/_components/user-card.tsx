@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ProfileImage } from "~/app/_components/profile-image";
+import { ProfileImage } from "~/app/app/_components/profile-image";
 import { Card, CardDescription, CardTitle } from "~/components/ui/card";
 import { type RouterOutputs } from "~/trpc/react";
 

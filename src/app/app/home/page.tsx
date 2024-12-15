@@ -1,4 +1,4 @@
-import { ThreadCard } from "~/app/_components/thread-card";
+import { ThreadCard } from "~/app/app/_components/thread-card";
 import { SubmitButton } from "~/components/ui/submit-button";
 import { Textarea } from "~/components/ui/textarea";
 import { createThreadSchema } from "~/server/api/routers/thread";

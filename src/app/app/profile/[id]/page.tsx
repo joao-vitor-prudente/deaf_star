@@ -1,4 +1,4 @@
-import { ProfileImage } from "~/app/_components/profile-image";
+import { ProfileImage } from "~/app/app/_components/profile-image";
 import { api } from "~/trpc/server";
 import { profileParamsSchema } from "./layout";
 
