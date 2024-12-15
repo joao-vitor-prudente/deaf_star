@@ -14,7 +14,7 @@ export default async function ProfilePage(props: PageProps): AsyncReactNode {
           <h6 className="text-2xl">{user.name ?? "Usuário sem nome"}</h6>
           <p>{user.email}</p>
         </div>
-        <ProfileImage size={80} image={user.profileImage} />
+        <ProfileImage size={80} image={user.profileImage} expandedSize={240} />
       </header>
       <p className="max-w-96 text-sm text-muted-foreground">{user.bio}</p>
     </main>

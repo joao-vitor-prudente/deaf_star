@@ -17,7 +17,7 @@ export function ThreadCard(props: ThreadCardProps): ReactNode {
     <Card className="max-w-96 p-2">
       <div className="flex gap-2">
         <CardTitle>
-          <ProfileImage image={props.thread.author.profileImage} size={40} />
+          <ProfileImage image={props.thread.author.profileImage} size={40} expandedSize={240} />
         </CardTitle>
         <CardDescription className="flex items-center">
           <p>
@@ -27,7 +27,7 @@ export function ThreadCard(props: ThreadCardProps): ReactNode {
         </CardDescription>
       </div>
       <CardContent className="p-0">
-        <p>{props.thread.text}</p>
+        <p>{props.thread.text}</p>s
       </CardContent>
       <CardFooter className="justify-end p-0">
         <p className="text-sm text-muted-foreground">
