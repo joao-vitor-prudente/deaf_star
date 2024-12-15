@@ -80,7 +80,7 @@ export const replies = createTable(
   ],
 );
 
-export const threadThreeRelations = relations(replies, ({ one }) => ({
+export const replyRelations = relations(replies, ({ one }) => ({
   thread: one(threads, {
     fields: [replies.threadId],
     references: [threads.id],
@@ -102,7 +102,7 @@ export const users = createTable(
       withTimezone: true,
     }).default(sql`CURRENT_TIMESTAMP`),
     image: varchar("image", { length: 255 }), // only for authjs adapter
-    imageId: integer().references(() => images.id),
+    imageId: integer("image_id").references(() => images.id),
     bio: varchar("bio", { length: 255 }),
   },
   (table) => [
