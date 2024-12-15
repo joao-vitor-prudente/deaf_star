@@ -42,6 +42,7 @@ const updateUserSchema = updateUserSchemaWithoutImage.extend({
 export const userRouter = createTRPCRouter({
   list: protectedProc.input(listUsersSchema).query(async (req) => {
     return await req.ctx.db.query.users.findMany({
+      with: { profileImage: true },
       where: (users, { ilike, and, or, ne }) => {
         const searchStringQuery = or(
           ilike(users.email, `%${req.input.searchString}%`),

@@ -1,14 +1,24 @@
 import Link from "next/link";
-import { type User } from "~/server/db/schema";
+import { ProfileImage } from "~/app/_components/profile-image";
+import { Card, CardDescription, CardTitle } from "~/components/ui/card";
+import { type RouterOutputs } from "~/trpc/react";
 
-type UserCardProps = Readonly<{ user: User }>;
+type UserCardProps = Readonly<{
+  user: RouterOutputs["user"]["list"][number];
+}>;
 
 export function UserCard(props: UserCardProps): ReactNode {
   return (
     <Link href={`/app/profile/${props.user.id}`}>
-      <div className="rounded-md p-4 hover:bg-primary-foreground">
-        <span>{props.user.email}</span>
-      </div>
+      <Card className="flex items-center gap-2 p-2">
+        <CardTitle>
+          <ProfileImage image={props.user.profileImage} size={40} />
+        </CardTitle>
+        <CardDescription>
+          <span>@</span>
+          <span>{props.user.name ?? props.user.email}</span>
+        </CardDescription>
+      </Card>
     </Link>
   );
 }
