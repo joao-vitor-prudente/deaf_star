@@ -1,5 +1,5 @@
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import { type NextAuthConfig, type Session } from "next-auth";
+import { type NextAuthConfig } from "next-auth";
 import NodeMailerProvider from "next-auth/providers/nodemailer";
 import { db } from "~/server/db";
 import {
@@ -36,9 +36,5 @@ export const authConfig = {
   },
   callbacks: {
     authorized: ({ auth }): boolean => !!auth,
-    session: ({ session, user }): Session => ({
-      ...session,
-      user: { ...session.user, id: user.id },
-    }),
   },
 } satisfies NextAuthConfig;

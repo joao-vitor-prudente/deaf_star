@@ -1,3 +1,7 @@
 {
-  "eslint.useFlatConfig": true
+  "eslint.useFlatConfig": true,
+  "sonarlint.connectedMode.project": {
+    "connectionId": "joao-vitor-prudente",
+    "projectKey": "joao-vitor-prudente_deaf_star"
+  }
 }

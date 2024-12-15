@@ -25,6 +25,25 @@ const commonColumns = {
   }).notNull(),
 };
 
+export enum ImageFormat {
+  PNG = "image/png",
+  JPEG = "image/jpeg",
+}
+
+export const images = createTable("image", {
+  ...commonColumns,
+  name: varchar("name", { length: 255 }).notNull(),
+  data: varchar("data").notNull(),
+  format: varchar("format", {
+    enum: [ImageFormat.PNG, ImageFormat.JPEG],
+  }).notNull(),
+  size: integer("size").notNull(),
+});
+
+export const imageRelations = relations(images, ({ one }) => ({
+  user: one(users, { fields: [images.id], references: [users.imageId] }),
+}));
+
 export const threads = createTable(
   "thread",
   {
@@ -69,27 +88,41 @@ export const threadThreeRelations = relations(replies, ({ one }) => ({
   reply: one(threads, { fields: [replies.replyId], references: [threads.id] }),
 }));
 
-export const users = createTable("user", {
-  id: varchar("id", { length: 255 })
-    .notNull()
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  name: varchar("name", { length: 255 }),
-  email: varchar("email", { length: 255 }).notNull(),
-  emailVerified: timestamp("email_verified", {
-    mode: "date",
-    withTimezone: true,
-  }).default(sql`CURRENT_TIMESTAMP`),
-  image: varchar("image", { length: 255 }),
-  bio: varchar("bio", { length: 255 }),
-});
+export const users = createTable(
+  "user",
+  {
+    id: varchar("id", { length: 255 })
+      .notNull()
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    name: varchar("name", { length: 255 }),
+    email: varchar("email", { length: 255 }).notNull(),
+    emailVerified: timestamp("email_verified", {
+      mode: "date",
+      withTimezone: true,
+    }).default(sql`CURRENT_TIMESTAMP`),
+    image: varchar("image", { length: 255 }), // only for authjs adapter
+    imageId: integer().references(() => images.id),
+    bio: varchar("bio", { length: 255 }),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.imageId],
+      foreignColumns: [images.id],
+    }).onDelete("set null"),
+  ],
+);
 
 export type User = typeof users.$inferSelect;
 
-export const usersRelations = relations(users, ({ many }) => ({
+export const usersRelations = relations(users, ({ many, one }) => ({
   accounts: many(accounts),
   threads: many(threads),
   friends: many(friendships),
+  profileImage: one(images, {
+    fields: [users.imageId],
+    references: [images.id],
+  }),
 }));
 
 export const friendships = createTable(
