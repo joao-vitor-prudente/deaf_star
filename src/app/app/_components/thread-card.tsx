@@ -1,39 +1,72 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardTitle,
-} from "~/components/ui/card";
+import { Heart, Share } from "lucide-react";
+import { ClipboardButton } from "~/components/ui/clipboard-button";
+import { SubmitButton } from "~/components/ui/submit-button";
+import { env } from "~/env";
+import { auth } from "~/helpers/auth";
+import { toggleLikeSchema } from "~/server/api/routers/like";
 import { type RouterOutputs } from "~/trpc/react";
+import { api, revalidateTRPC } from "~/trpc/server";
 import { ProfileImage } from "./profile-image";
+
+async function toggleLikeAction(formData: FormData): Promise<void> {
+  "use server";
+  const objectData = Object.fromEntries(formData.entries());
+  const parsedData = toggleLikeSchema.parse(objectData);
+  await api.like.toggle(parsedData);
+  revalidateTRPC("thread.list");
+}
 
 type ThreadCardProps = Readonly<{
   thread: RouterOutputs["thread"]["list"][number];
 }>;
 
-export function ThreadCard(props: ThreadCardProps): ReactNode {
+export async function ThreadCard(props: ThreadCardProps): AsyncReactNode {
+  const threadUrl = `${env.NEXT_PUBLIC_HTTP_URL}/app/thread/${props.thread.id}`;
+  const session = await auth();
+  const hasLiked = props.thread.postsLikedUsers.some(
+    (like) => like.userId === session.user.id,
+  );
+
   return (
-    <Card className="max-w-96 p-2">
-      <div className="flex gap-2">
-        <CardTitle>
-          <ProfileImage image={props.thread.author.profileImage} size={40} expandedSize={240} />
-        </CardTitle>
-        <CardDescription className="flex items-center">
-          <p>
-            <span>@</span>
-            <span>{props.thread.author.name ?? props.thread.author.email}</span>
-          </p>
-        </CardDescription>
-      </div>
-      <CardContent className="p-0">
-        <p>{props.thread.text}</p>s
-      </CardContent>
-      <CardFooter className="justify-end p-0">
+    <section className="max-w-96 rounded-md border p-2">
+      <header className="flex items-center gap-4 text-muted-foreground">
+        <ProfileImage
+          image={props.thread.author.profileImage}
+          size={40}
+          expandedSize={240}
+        />
+        <h6>
+          <span>@</span>
+          <span>{props.thread.author.name ?? props.thread.author.email}</span>
+        </h6>
+      </header>
+      <main>
+        <p>{props.thread.text}</p>
+      </main>
+      <footer className="flex flex-col items-end">
         <p className="text-sm text-muted-foreground">
           {props.thread.createdAt.toDateString()}
         </p>
-      </CardFooter>
-    </Card>
+        <ul className="flex gap-2">
+          <li>
+            <ClipboardButton variant="ghost" text={threadUrl}>
+              <Share />
+            </ClipboardButton>
+          </li>
+          <li>
+            <form action={toggleLikeAction}>
+              <input type="hidden" name="threadId" value={props.thread.id} />
+              <SubmitButton variant="ghost" className="flex gap-2" noLoading>
+                <Heart
+                  data-liked={hasLiked}
+                  className="data-[liked=true]:text-red-500"
+                />
+                <span>{props.thread.likes}</span>
+              </SubmitButton>
+            </form>
+          </li>
+        </ul>
+      </footer>
+    </section>
   );
 }

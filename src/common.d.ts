@@ -15,9 +15,9 @@ type LayoutProps = Readonly<{
   params: Promise<Record<string, string | string[] | undefined>>;
 }>;
 
-type AsyncReactNode = Promise<Awaited<React.ReactNode>>;
+type AsyncReactNode = Promise<Awaited<React.JSX.Element>>;
 
-type ReactNode = React.JSX.Element;
+type ReactNode = React.JSX.ELement;
 
 type ComponentProps<T extends React.ElementType> = Readonly<
   React.ComponentPropsWithoutRef<T>
