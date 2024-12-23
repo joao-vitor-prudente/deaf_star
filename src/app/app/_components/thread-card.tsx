@@ -23,7 +23,7 @@ type ThreadCardProps = Readonly<{
 export async function ThreadCard(props: ThreadCardProps): AsyncReactNode {
   const threadUrl = `${env.NEXT_PUBLIC_HTTP_URL}/app/thread/${props.thread.id}`;
   const session = await auth();
-  const hasLiked = props.thread.postsLikedUsers.some(
+  const hasLiked = props.thread.threadsLikedUsers.some(
     (like) => like.userId === session.user.id,
   );
 

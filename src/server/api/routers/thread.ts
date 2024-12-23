@@ -15,7 +15,10 @@ export const threadRouter = createTRPCRouter({
 
   list: protectedProc.query(async (req) => {
     return await req.ctx.db.query.threads.findMany({
-      with: { author: { with: { profileImage: true } }, postsLikedUsers: true },
+      with: {
+        author: { with: { profileImage: true } },
+        threadsLikedUsers: true,
+      },
       orderBy: (thread, { desc }) => desc(thread.createdAt),
     });
   }),
