@@ -52,6 +52,7 @@ export const threads = createTable(
     authorId: varchar("author_id", { length: 255 })
       .notNull()
       .references(() => users.id),
+    likes: integer("likes").notNull().default(0),
   },
   (thread) => [
     foreignKey({ columns: [thread.authorId], foreignColumns: [users.id] }),
@@ -61,6 +62,7 @@ export const threads = createTable(
 export const threadRelations = relations(threads, ({ one, many }) => ({
   author: one(users, { fields: [threads.authorId], references: [users.id] }),
   replies: many(threads),
+  postsLikedUsers: many(postsLikedUsers),
 }));
 
 export const replies = createTable(
@@ -86,6 +88,34 @@ export const replyRelations = relations(replies, ({ one }) => ({
     references: [threads.id],
   }),
   reply: one(threads, { fields: [replies.replyId], references: [threads.id] }),
+}));
+
+export const postsLikedUsers = createTable(
+  "posts_liked_users",
+  {
+    ...commonColumns,
+    postId: integer("post_id")
+      .notNull()
+      .references(() => threads.id),
+    userId: varchar("user_id", { length: 255 })
+      .notNull()
+      .references(() => users.id),
+  },
+  (table) => [
+    foreignKey({ columns: [table.postId], foreignColumns: [threads.id] }),
+    foreignKey({ columns: [table.userId], foreignColumns: [users.id] }),
+  ],
+);
+
+export const postLikedUserRelations = relations(postsLikedUsers, ({ one }) => ({
+  post: one(threads, {
+    fields: [postsLikedUsers.postId],
+    references: [threads.id],
+  }),
+  user: one(users, {
+    fields: [postsLikedUsers.userId],
+    references: [users.id],
+  }),
 }));
 
 export const users = createTable(
@@ -123,6 +153,7 @@ export const usersRelations = relations(users, ({ many, one }) => ({
     fields: [users.imageId],
     references: [images.id],
   }),
+  postsLikedUsers: many(postsLikedUsers),
 }));
 
 export const friendships = createTable(
