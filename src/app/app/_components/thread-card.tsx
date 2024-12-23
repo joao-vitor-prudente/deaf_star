@@ -1,4 +1,5 @@
 import { Heart, Share } from "lucide-react";
+import Link from "next/link";
 import { ClipboardButton } from "~/components/ui/clipboard-button";
 import { SubmitButton } from "~/components/ui/submit-button";
 import { env } from "~/env";
@@ -35,10 +36,12 @@ export async function ThreadCard(props: ThreadCardProps): AsyncReactNode {
           size={40}
           expandedSize={240}
         />
-        <h6>
-          <span>@</span>
-          <span>{props.thread.author.name ?? props.thread.author.email}</span>
-        </h6>
+        <Link href={`/app/profile/${props.thread.author.id}`}>
+          <h6>
+            <span>@</span>
+            <span>{props.thread.author.name ?? props.thread.author.email}</span>
+          </h6>
+        </Link>
       </header>
       <main>
         <p>{props.thread.text}</p>
