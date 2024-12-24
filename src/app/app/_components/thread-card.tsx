@@ -1,14 +1,23 @@
-import { Heart, MessageCircle, Share } from "lucide-react";
+import { PopoverContent } from "@radix-ui/react-popover";
+import {
+  EllipsisVertical,
+  Heart,
+  MessageCircle,
+  Share,
+  Trash,
+} from "lucide-react";
 import Link from "next/link";
+import { Button } from "~/components/ui/button";
 import { ClipboardButton } from "~/components/ui/clipboard-button";
+import { Popover, PopoverTrigger } from "~/components/ui/popover";
 import { SubmitButton } from "~/components/ui/submit-button";
 import { env } from "~/env";
 import { auth } from "~/helpers/auth";
 import { toggleLikeSchema } from "~/server/api/routers/like";
+import { getThreadByIdSchema } from "~/server/api/routers/thread";
 import { type RouterOutputs } from "~/trpc/react";
 import { api, revalidateTRPC } from "~/trpc/server";
 import { ProfileImage } from "./profile-image";
-import { Button } from "~/components/ui/button";
 
 async function toggleLikeAction(formData: FormData): Promise<void> {
   "use server";
@@ -16,6 +25,16 @@ async function toggleLikeAction(formData: FormData): Promise<void> {
   const parsedData = toggleLikeSchema.parse(objectData);
   await api.like.toggle(parsedData);
   revalidateTRPC("thread.list");
+}
+
+async function deleteThreadAction(formData: FormData): Promise<void> {
+  "use server";
+  const objectData = Object.fromEntries(formData.entries());
+  const parsedData = getThreadByIdSchema.parse(objectData);
+  await api.thread.delete(parsedData);
+  revalidateTRPC("thread.list");
+  revalidateTRPC("thread.getById");
+  revalidateTRPC("reply.list");
 }
 
 type ThreadCardProps = Readonly<{
@@ -30,19 +49,51 @@ export async function ThreadCard(props: ThreadCardProps): AsyncReactNode {
   );
 
   return (
-    <section className="max-w-96 rounded-md border p-2">
-      <header className="flex items-center gap-4 text-muted-foreground">
-        <ProfileImage
-          image={props.thread.author.profileImage}
-          size={40}
-          expandedSize={240}
-        />
-        <Link href={`/app/profile/${props.thread.author.id}`}>
-          <h6>
-            <span>@</span>
-            <span>{props.thread.author.name ?? props.thread.author.email}</span>
-          </h6>
-        </Link>
+    <section className="max-w-96 rounded-md border p-4">
+      <header className="flex items-center justify-between text-muted-foreground">
+        <div className="flex items-center gap-4">
+          <ProfileImage
+            image={props.thread.author.profileImage}
+            size={40}
+            expandedSize={240}
+          />
+          <Link href={`/app/profile/${props.thread.author.id}`}>
+            <h6>
+              <span>@</span>
+              <span>
+                {props.thread.author.name ?? props.thread.author.email}
+              </span>
+            </h6>
+          </Link>
+        </div>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="ghost">
+              <EllipsisVertical />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent
+            sideOffset={32}
+            alignOffset={-18}
+            align="start"
+            side="right"
+            className="flex flex-col gap-2 rounded-md border bg-background p-4"
+          >
+            <h6 className="text-sm">Thread actions</h6>
+            <form action={deleteThreadAction}>
+              <input type="hidden" name="id" value={props.thread.id} readOnly />
+              <SubmitButton
+                variant="destructive"
+                className="w-full"
+                size="sm"
+                successMessage="Thread deleted successfully"
+              >
+                <Trash />
+                <span>Delete</span>
+              </SubmitButton>
+            </form>
+          </PopoverContent>
+        </Popover>
       </header>
       <main>
         <Link href={`/app/threads/${props.thread.id}`}>

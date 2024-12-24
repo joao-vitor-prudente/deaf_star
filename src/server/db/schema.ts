@@ -86,8 +86,14 @@ export const replies = createTable(
       .references(() => threads.id),
   },
   (thread) => [
-    foreignKey({ columns: [thread.threadId], foreignColumns: [threads.id] }),
-    foreignKey({ columns: [thread.replyId], foreignColumns: [threads.id] }),
+    foreignKey({
+      columns: [thread.threadId],
+      foreignColumns: [threads.id],
+    }).onDelete("cascade"),
+    foreignKey({
+      columns: [thread.replyId],
+      foreignColumns: [threads.id],
+    }).onDelete("cascade"),
   ],
 );
 
@@ -111,7 +117,10 @@ export const threadsLikedUsers = createTable(
       .references(() => users.id),
   },
   (table) => [
-    foreignKey({ columns: [table.threadId], foreignColumns: [threads.id] }),
+    foreignKey({
+      columns: [table.threadId],
+      foreignColumns: [threads.id],
+    }).onDelete("cascade"),
     foreignKey({ columns: [table.userId], foreignColumns: [users.id] }),
   ],
 );

@@ -50,6 +50,13 @@
       "when": 1735000875327,
       "tag": "0006_add_reply_count",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1735001606717,
+      "tag": "0007_cascade_likes_and_replies",
+      "breakpoints": true
     }
   ]
 }
