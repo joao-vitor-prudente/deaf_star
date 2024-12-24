@@ -21,7 +21,6 @@ export const threadRouter = createTRPCRouter({
     });
 
     await req.ctx.db.transaction(async (tx) => {
-      // recursively delete replies
       await tx.execute(sql`
         with recursive reply_tree as (
           select reply_id, thread_id 
@@ -35,13 +34,12 @@ export const threadRouter = createTRPCRouter({
           join reply_tree rt on re.thread_id = rt.reply_id
         )
 
-        delete from deaf_star_thread 
+        delete from deaf_star_threads 
         where id in (select reply_id from reply_tree);
       `);
 
       await tx.delete(threads).where(eq(threads.id, req.input.id));
 
-      // if is reply, decrement thread replied to reply count
       if (!parent) return;
       await tx
         .update(threads)

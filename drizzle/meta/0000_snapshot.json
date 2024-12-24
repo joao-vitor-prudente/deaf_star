@@ -1,11 +1,11 @@
 {
-  "id": "74d228cc-fdc0-4179-b617-d638df89b5bf",
+  "id": "923a965a-3893-4549-b2d1-8849ef6cd573",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.deaf_star_account": {
-      "name": "deaf_star_account",
+    "public.deaf_star_accounts": {
+      "name": "deaf_star_accounts",
       "schema": "",
       "columns": {
         "user_id": {
@@ -93,10 +93,10 @@
         }
       },
       "foreignKeys": {
-        "deaf_star_account_user_id_deaf_star_user_id_fk": {
-          "name": "deaf_star_account_user_id_deaf_star_user_id_fk",
-          "tableFrom": "deaf_star_account",
-          "tableTo": "deaf_star_user",
+        "deaf_star_accounts_user_id_deaf_star_users_id_fk": {
+          "name": "deaf_star_accounts_user_id_deaf_star_users_id_fk",
+          "tableFrom": "deaf_star_accounts",
+          "tableTo": "deaf_star_users",
           "columnsFrom": [
             "user_id"
           ],
@@ -108,8 +108,8 @@
         }
       },
       "compositePrimaryKeys": {
-        "deaf_star_account_provider_provider_account_id_pk": {
-          "name": "deaf_star_account_provider_provider_account_id_pk",
+        "deaf_star_accounts_provider_provider_account_id_pk": {
+          "name": "deaf_star_accounts_provider_provider_account_id_pk",
           "columns": [
             "provider",
             "provider_account_id"
@@ -121,8 +121,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.deaf_star_friendship": {
-      "name": "deaf_star_friendship",
+    "public.deaf_star_friendships": {
+      "name": "deaf_star_friendships",
       "schema": "",
       "columns": {
         "id": {
@@ -168,10 +168,10 @@
         }
       },
       "foreignKeys": {
-        "deaf_star_friendship_user_id_deaf_star_user_id_fk": {
-          "name": "deaf_star_friendship_user_id_deaf_star_user_id_fk",
-          "tableFrom": "deaf_star_friendship",
-          "tableTo": "deaf_star_user",
+        "deaf_star_friendships_user_id_deaf_star_users_id_fk": {
+          "name": "deaf_star_friendships_user_id_deaf_star_users_id_fk",
+          "tableFrom": "deaf_star_friendships",
+          "tableTo": "deaf_star_users",
           "columnsFrom": [
             "user_id"
           ],
@@ -181,10 +181,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "deaf_star_friendship_friend_id_deaf_star_user_id_fk": {
-          "name": "deaf_star_friendship_friend_id_deaf_star_user_id_fk",
-          "tableFrom": "deaf_star_friendship",
-          "tableTo": "deaf_star_user",
+        "deaf_star_friendships_friend_id_deaf_star_users_id_fk": {
+          "name": "deaf_star_friendships_friend_id_deaf_star_users_id_fk",
+          "tableFrom": "deaf_star_friendships",
+          "tableTo": "deaf_star_users",
           "columnsFrom": [
             "friend_id"
           ],
@@ -195,6 +195,62 @@
           "onUpdate": "no action"
         }
       },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.deaf_star_images": {
+      "name": "deaf_star_images",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "data": {
+          "name": "data",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "format": {
+          "name": "format",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "size": {
+          "name": "size",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -239,30 +295,30 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "deaf_star_replies_thread_id_deaf_star_thread_id_fk": {
-          "name": "deaf_star_replies_thread_id_deaf_star_thread_id_fk",
+        "deaf_star_replies_thread_id_deaf_star_threads_id_fk": {
+          "name": "deaf_star_replies_thread_id_deaf_star_threads_id_fk",
           "tableFrom": "deaf_star_replies",
-          "tableTo": "deaf_star_thread",
+          "tableTo": "deaf_star_threads",
           "columnsFrom": [
             "thread_id"
           ],
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "deaf_star_replies_reply_id_deaf_star_thread_id_fk": {
-          "name": "deaf_star_replies_reply_id_deaf_star_thread_id_fk",
+        "deaf_star_replies_reply_id_deaf_star_threads_id_fk": {
+          "name": "deaf_star_replies_reply_id_deaf_star_threads_id_fk",
           "tableFrom": "deaf_star_replies",
-          "tableTo": "deaf_star_thread",
+          "tableTo": "deaf_star_threads",
           "columnsFrom": [
             "reply_id"
           ],
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -272,8 +328,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.deaf_star_session": {
-      "name": "deaf_star_session",
+    "public.deaf_star_sessions": {
+      "name": "deaf_star_sessions",
       "schema": "",
       "columns": {
         "session_token": {
@@ -313,10 +369,10 @@
         }
       },
       "foreignKeys": {
-        "deaf_star_session_user_id_deaf_star_user_id_fk": {
-          "name": "deaf_star_session_user_id_deaf_star_user_id_fk",
-          "tableFrom": "deaf_star_session",
-          "tableTo": "deaf_star_user",
+        "deaf_star_sessions_user_id_deaf_star_users_id_fk": {
+          "name": "deaf_star_sessions_user_id_deaf_star_users_id_fk",
+          "tableFrom": "deaf_star_sessions",
+          "tableTo": "deaf_star_users",
           "columnsFrom": [
             "user_id"
           ],
@@ -333,8 +389,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.deaf_star_thread": {
-      "name": "deaf_star_thread",
+    "public.deaf_star_threads": {
+      "name": "deaf_star_threads",
       "schema": "",
       "columns": {
         "id": {
@@ -367,14 +423,35 @@
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
+        },
+        "like_count": {
+          "name": "like_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "reply_count": {
+          "name": "reply_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "type": {
+          "name": "type",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'root'"
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "deaf_star_thread_author_id_deaf_star_user_id_fk": {
-          "name": "deaf_star_thread_author_id_deaf_star_user_id_fk",
-          "tableFrom": "deaf_star_thread",
-          "tableTo": "deaf_star_user",
+        "deaf_star_threads_author_id_deaf_star_users_id_fk": {
+          "name": "deaf_star_threads_author_id_deaf_star_users_id_fk",
+          "tableFrom": "deaf_star_threads",
+          "tableTo": "deaf_star_users",
           "columnsFrom": [
             "author_id"
           ],
@@ -391,8 +468,79 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.deaf_star_user": {
-      "name": "deaf_star_user",
+    "public.deaf_star_threads_liked_users": {
+      "name": "deaf_star_threads_liked_users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "thread_id": {
+          "name": "thread_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "deaf_star_threads_liked_users_thread_id_deaf_star_threads_id_fk": {
+          "name": "deaf_star_threads_liked_users_thread_id_deaf_star_threads_id_fk",
+          "tableFrom": "deaf_star_threads_liked_users",
+          "tableTo": "deaf_star_threads",
+          "columnsFrom": [
+            "thread_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "deaf_star_threads_liked_users_user_id_deaf_star_users_id_fk": {
+          "name": "deaf_star_threads_liked_users_user_id_deaf_star_users_id_fk",
+          "tableFrom": "deaf_star_threads_liked_users",
+          "tableTo": "deaf_star_users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.deaf_star_users": {
+      "name": "deaf_star_users",
       "schema": "",
       "columns": {
         "id": {
@@ -426,6 +574,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "image_id": {
+          "name": "image_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "bio": {
           "name": "bio",
           "type": "varchar(255)",
@@ -434,15 +588,29 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "deaf_star_users_image_id_deaf_star_images_id_fk": {
+          "name": "deaf_star_users_image_id_deaf_star_images_id_fk",
+          "tableFrom": "deaf_star_users",
+          "tableTo": "deaf_star_images",
+          "columnsFrom": [
+            "image_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.deaf_star_verification_token": {
-      "name": "deaf_star_verification_token",
+    "public.deaf_star_verification_tokens": {
+      "name": "deaf_star_verification_tokens",
       "schema": "",
       "columns": {
         "identifier": {
@@ -467,8 +635,8 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {
-        "deaf_star_verification_token_identifier_token_pk": {
-          "name": "deaf_star_verification_token_identifier_token_pk",
+        "deaf_star_verification_tokens_identifier_token_pk": {
+          "name": "deaf_star_verification_tokens_identifier_token_pk",
           "columns": [
             "identifier",
             "token"

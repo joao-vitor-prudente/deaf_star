@@ -30,7 +30,7 @@ export enum ImageFormat {
   JPEG = "image/jpeg",
 }
 
-export const images = createTable("image", {
+export const images = createTable("images", {
   ...commonColumns,
   name: varchar("name", { length: 255 }).notNull(),
   data: varchar("data").notNull(),
@@ -52,7 +52,7 @@ export enum ThreadType {
 const threadTypes = [ThreadType.root, ThreadType.reply] as const;
 
 export const threads = createTable(
-  "thread",
+  "threads",
   {
     ...commonColumns,
     text: text("text").notNull(),
@@ -140,7 +140,7 @@ export const threadLikedUserRelations = relations(
 );
 
 export const users = createTable(
-  "user",
+  "users",
   {
     id: varchar("id", { length: 255 })
       .notNull()
@@ -178,7 +178,7 @@ export const usersRelations = relations(users, ({ many, one }) => ({
 }));
 
 export const friendships = createTable(
-  "friendship",
+  "friendships",
   {
     id: serial("id").primaryKey().notNull(),
     userId: varchar("user_id", { length: 255 })
@@ -204,7 +204,7 @@ export const friendshipsRelations = relations(friendships, ({ one }) => ({
 }));
 
 export const accounts = createTable(
-  "account",
+  "accounts",
   {
     userId: varchar("user_id", { length: 255 })
       .notNull()
@@ -237,7 +237,7 @@ export const accountsRelations = relations(accounts, ({ one }) => ({
 }));
 
 export const sessions = createTable(
-  "session",
+  "sessions",
   {
     sessionToken: varchar("session_token", { length: 255 })
       .notNull()
@@ -260,7 +260,7 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
 }));
 
 export const verificationTokens = createTable(
-  "verification_token",
+  "verification_tokens",
   {
     identifier: varchar("identifier", { length: 255 }).notNull(),
     token: varchar("token", { length: 255 }).notNull(),
