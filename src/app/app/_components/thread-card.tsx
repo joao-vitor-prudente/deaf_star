@@ -45,6 +45,7 @@ type ThreadCardProps = Readonly<{
 export async function ThreadCard(props: ThreadCardProps): AsyncReactNode {
   const threadUrl = `${env.NEXT_PUBLIC_HTTP_URL}/app/thread/${props.thread.id}`;
   const session = await auth();
+  const isOwner = session.user.id === props.thread.author.id;
   const hasLiked = props.thread.threadsLikedUsers.some(
     (like) => like.userId === session.user.id,
   );
@@ -69,7 +70,7 @@ export async function ThreadCard(props: ThreadCardProps): AsyncReactNode {
         </div>
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="ghost">
+            <Button variant="ghost" hidden={!isOwner} disabled={!isOwner}>
               <EllipsisVertical />
             </Button>
           </PopoverTrigger>
