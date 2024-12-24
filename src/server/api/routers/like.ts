@@ -29,7 +29,7 @@ async function removeLike(tx: Transaction, threadId: number): Promise<void> {
     .where(eq(threadsLikedUsers.threadId, threadId));
   await tx
     .update(threads)
-    .set({ likes: sql`${threads.likes} - 1` })
+    .set({ likeCount: sql`${threads.likeCount} - 1` })
     .where(eq(threads.id, threadId));
 }
 
@@ -45,6 +45,6 @@ async function addLike(
   });
   await tx
     .update(threads)
-    .set({ likes: sql`${threads.likes} + 1` })
+    .set({ likeCount: sql`${threads.likeCount} + 1` })
     .where(eq(threads.id, threadId));
 }

@@ -36,6 +36,20 @@
       "when": 1734921229326,
       "tag": "0004_rename_posts_to_threads",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1734924064803,
+      "tag": "0005_add_thread_type",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1735000875327,
+      "tag": "0006_add_reply_count",
+      "breakpoints": true
     }
   ]
 }

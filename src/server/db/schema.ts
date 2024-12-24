@@ -44,6 +44,13 @@ export const imageRelations = relations(images, ({ one }) => ({
   user: one(users, { fields: [images.id], references: [users.imageId] }),
 }));
 
+export enum ThreadType {
+  root = "root",
+  reply = "reply",
+}
+
+const threadTypes = [ThreadType.root, ThreadType.reply] as const;
+
 export const threads = createTable(
   "thread",
   {
@@ -52,7 +59,9 @@ export const threads = createTable(
     authorId: varchar("author_id", { length: 255 })
       .notNull()
       .references(() => users.id),
-    likes: integer("likes").notNull().default(0),
+    likeCount: integer("like_count").notNull().default(0),
+    replyCount: integer("reply_count").notNull().default(0),
+    type: varchar("type", { enum: threadTypes }).default(ThreadType.root),
   },
   (thread) => [
     foreignKey({ columns: [thread.authorId], foreignColumns: [users.id] }),

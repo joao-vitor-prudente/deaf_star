@@ -1,4 +1,4 @@
-import { Heart, Share } from "lucide-react";
+import { Heart, MessageCircle, Share } from "lucide-react";
 import Link from "next/link";
 import { ClipboardButton } from "~/components/ui/clipboard-button";
 import { SubmitButton } from "~/components/ui/submit-button";
@@ -8,6 +8,7 @@ import { toggleLikeSchema } from "~/server/api/routers/like";
 import { type RouterOutputs } from "~/trpc/react";
 import { api, revalidateTRPC } from "~/trpc/server";
 import { ProfileImage } from "./profile-image";
+import { Button } from "~/components/ui/button";
 
 async function toggleLikeAction(formData: FormData): Promise<void> {
   "use server";
@@ -44,7 +45,9 @@ export async function ThreadCard(props: ThreadCardProps): AsyncReactNode {
         </Link>
       </header>
       <main>
-        <p>{props.thread.text}</p>
+        <Link href={`/app/threads/${props.thread.id}`}>
+          <p>{props.thread.text}</p>
+        </Link>
       </main>
       <footer className="flex flex-col items-end">
         <p className="text-sm text-muted-foreground">
@@ -57,6 +60,17 @@ export async function ThreadCard(props: ThreadCardProps): AsyncReactNode {
             </ClipboardButton>
           </li>
           <li>
+            <Button variant="ghost" asChild>
+              <Link
+                href={`/app/threads/${props.thread.id}`}
+                className="flex gap-2"
+              >
+                <MessageCircle />
+                <span>{props.thread.replyCount}</span>
+              </Link>
+            </Button>
+          </li>
+          <li>
             <form action={toggleLikeAction}>
               <input type="hidden" name="threadId" value={props.thread.id} />
               <SubmitButton variant="ghost" className="flex gap-2" noLoading>
@@ -64,7 +78,7 @@ export async function ThreadCard(props: ThreadCardProps): AsyncReactNode {
                   data-liked={hasLiked}
                   className="data-[liked=true]:text-red-500"
                 />
-                <span>{props.thread.likes}</span>
+                <span>{props.thread.likeCount}</span>
               </SubmitButton>
             </form>
           </li>
