@@ -34,6 +34,7 @@ async function deleteThreadAction(formData: FormData): Promise<void> {
   await api.thread.delete(parsedData);
   revalidateTRPC("thread.list");
   revalidateTRPC("thread.getById");
+  revalidateTRPC("thread.listByAuthor");
   revalidateTRPC("reply.list");
 }
 

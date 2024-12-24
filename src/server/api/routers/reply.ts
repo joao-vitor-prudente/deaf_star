@@ -1,7 +1,7 @@
+import { eq, sql } from "drizzle-orm";
 import { z } from "zod";
 import { replies, threads, ThreadType } from "~/server/db/schema";
 import { createTRPCRouter, protectedProc } from "../trpc";
-import { eq, sql } from "drizzle-orm";
 
 export const createReplySchema = z.object({
   threadId: z.number({ coerce: true }),

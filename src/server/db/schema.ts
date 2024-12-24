@@ -49,7 +49,7 @@ export enum ThreadType {
   reply = "reply",
 }
 
-const threadTypes = [ThreadType.root, ThreadType.reply] as const;
+export const threadTypes = [ThreadType.root, ThreadType.reply] as const;
 
 export const threads = createTable(
   "threads",

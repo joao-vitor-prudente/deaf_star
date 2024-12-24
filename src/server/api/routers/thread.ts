@@ -1,10 +1,14 @@
 import { eq, sql } from "drizzle-orm";
 import { z } from "zod";
-import { threads, ThreadType } from "~/server/db/schema";
+import { threads, ThreadType, threadTypes } from "~/server/db/schema";
 import { createTRPCRouter, protectedProc } from "../trpc";
 
 export const createThreadSchema = z.object({ text: z.string() });
 export const getThreadByIdSchema = z.object({ id: z.number({ coerce: true }) });
+export const listTheadByAuthorSchema = z.object({
+  authorId: z.string(),
+  type: z.enum(threadTypes),
+});
 
 export const threadRouter = createTRPCRouter({
   create: protectedProc.input(createThreadSchema).mutation(async (req) => {
@@ -68,4 +72,21 @@ export const threadRouter = createTRPCRouter({
       },
     });
   }),
+
+  listByAuthor: protectedProc
+    .input(listTheadByAuthorSchema)
+    .query(async (req) => {
+      return await req.ctx.db.query.threads.findMany({
+        where: (thread, { eq, and }) =>
+          and(
+            eq(thread.authorId, req.input.authorId),
+            eq(thread.type, req.input.type),
+          ),
+        with: {
+          author: { with: { profileImage: true } },
+          threadsLikedUsers: true,
+        },
+        orderBy: (thread, { desc }) => desc(thread.createdAt),
+      });
+    }),
 });
