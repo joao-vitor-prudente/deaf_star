@@ -7,6 +7,7 @@ import {
 } from "~/components/ui/navigation-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { env } from "~/env";
+import { auth } from "~/helpers/auth";
 
 type ProfileLayoutProps = LayoutProps &
   Readonly<{
@@ -14,6 +15,7 @@ type ProfileLayoutProps = LayoutProps &
     threads: ReactNode;
     reposts: ReactNode;
     edit: ReactNode;
+    settings: ReactNode;
   }>;
 
 export const profileParamsSchema = z.object({ id: z.string() });
@@ -23,13 +25,16 @@ export default async function ProfileLayout(
 ): AsyncReactNode {
   const params = await props.params;
   const id = profileParamsSchema.parse(params).id;
+  const session = await auth();
+  const isOwner = session.user.id === id;
 
   return (
     <div className="space-y-8 p-8">
       {props.children}
       <NavigationMenu>
         <NavigationMenuList>
-          <NavigationMenuItem>{props.edit}</NavigationMenuItem>
+          {isOwner && <NavigationMenuItem>{props.edit}</NavigationMenuItem>}
+          {isOwner && <NavigationMenuItem>{props.settings}</NavigationMenuItem>}
           <NavigationMenuItem>
             <ClipboardButton
               text={`${env.NEXT_PUBLIC_HTTP_URL}/app/profile/${id}`}
