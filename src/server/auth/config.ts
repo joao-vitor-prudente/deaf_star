@@ -22,6 +22,8 @@ export const authConfig = {
         },
       },
       from: process.env.EMAIL_FROM,
+      sendVerificationRequest:
+        process.env.NODE_ENV !== "production" ? devSendVRequest : undefined,
     }),
   ],
   adapter: DrizzleAdapter(db, {
@@ -38,3 +40,7 @@ export const authConfig = {
     authorized: ({ auth }): boolean => !!auth,
   },
 } satisfies NextAuthConfig;
+
+function devSendVRequest(data: { url: string }): void {
+  console.log(data.url);
+}
