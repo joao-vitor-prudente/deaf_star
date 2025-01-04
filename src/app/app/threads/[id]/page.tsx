@@ -35,8 +35,8 @@ export default async function ThreadsPage(props: PageProps): AsyncReactNode {
             className="w-96"
             required
           />
-          <SubmitButton successMessage="Reply shared successfully">
-            Share
+          <SubmitButton successMessage="Reply posted successfully">
+            Reply
           </SubmitButton>
         </form>
       </header>
