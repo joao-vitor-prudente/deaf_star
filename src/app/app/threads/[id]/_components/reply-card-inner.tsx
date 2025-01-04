@@ -9,6 +9,7 @@ import {
   Share,
   Trash,
 } from "lucide-react";
+import { type Route } from "next";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
@@ -100,7 +101,7 @@ export function ReplyCardInner(props: ReplyCardInnerProps): ReactNode {
               size={40}
               expandedSize={240}
             />
-            <Link href={`/app/profile/${props.thread.author.id}`}>
+            <Link href={`/app/profile/${props.thread.author.id}` as Route}>
               <h6>
                 <span>@</span>
                 <span>

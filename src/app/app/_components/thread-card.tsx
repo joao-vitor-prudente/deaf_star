@@ -6,6 +6,7 @@ import {
   Share,
   Trash,
 } from "lucide-react";
+import { type Route } from "next";
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
 import { ClipboardButton } from "~/components/ui/clipboard-button";
@@ -59,7 +60,7 @@ export async function ThreadCard(props: ThreadCardProps): AsyncReactNode {
             size={40}
             expandedSize={240}
           />
-          <Link href={`/app/profile/${props.thread.author.id}`}>
+          <Link href={`/app/profile/${props.thread.author.id}` as Route}>
             <h6>
               <span>@</span>
               <span>

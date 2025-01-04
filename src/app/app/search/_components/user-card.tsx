@@ -1,3 +1,4 @@
+import { type Route } from "next";
 import Link from "next/link";
 import { ProfileImage } from "~/app/app/_components/profile-image";
 import { Card, CardDescription, CardTitle } from "~/components/ui/card";
@@ -9,7 +10,7 @@ type UserCardProps = Readonly<{
 
 export function UserCard(props: UserCardProps): ReactNode {
   return (
-    <Link href={`/app/profile/${props.user.id}`}>
+    <Link href={`/app/profile/${props.user.id}` as Route}>
       <Card className="flex items-center gap-2 p-2">
         <CardTitle>
           <ProfileImage image={props.user.profileImage} size={40} />
