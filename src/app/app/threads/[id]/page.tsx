@@ -5,6 +5,7 @@ import { createReplySchema } from "~/server/api/routers/reply";
 import { getThreadByIdSchema } from "~/server/api/routers/thread";
 import { api, revalidateTRPC } from "~/trpc/server";
 import { ThreadCard } from "../../_components/thread-card";
+import { ReplyCard } from "./_components/reply-card";
 
 async function createReplyAction(data: FormData): Promise<void> {
   "use server";
@@ -24,7 +25,7 @@ export default async function ThreadsPage(props: PageProps): AsyncReactNode {
 
   return (
     <main className="flex flex-col gap-4 p-8">
-      <header className="flex flex-col gap-4">
+      <header className="flex max-w-md flex-col gap-4">
         <ThreadCard thread={thread} />
         <form action={createReplyAction} className="flex gap-4">
           <input type="hidden" name="threadId" value={thread.id} readOnly />
@@ -41,10 +42,10 @@ export default async function ThreadsPage(props: PageProps): AsyncReactNode {
         </form>
       </header>
       <hr />
-      <ul>
+      <ul className="flex max-w-md flex-col gap-4">
         {replies.map((threadReply) => (
           <li key={threadReply.reply.id}>
-            <ThreadCard thread={threadReply.reply} />
+            <ReplyCard thread={threadReply.reply} />
           </li>
         ))}
       </ul>

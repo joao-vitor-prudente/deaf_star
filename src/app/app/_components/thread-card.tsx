@@ -51,7 +51,7 @@ export async function ThreadCard(props: ThreadCardProps): AsyncReactNode {
   );
 
   return (
-    <section className="max-w-96 rounded-md border p-4">
+    <section className="rounded-md border p-4">
       <header className="flex items-center justify-between text-muted-foreground">
         <div className="flex items-center gap-4">
           <ProfileImage
