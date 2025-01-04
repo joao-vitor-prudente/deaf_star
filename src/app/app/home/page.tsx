@@ -17,18 +17,13 @@ export default async function HomePage(): AsyncReactNode {
 
   return (
     <main className="space-y-8 p-8">
-      <form action={createThreadAction} className="flex gap-4">
-        <Textarea
-          id="text"
-          name="text"
-          placeholder="Whats on your mind?"
-          className="w-96"
-        />
+      <form action={createThreadAction} className="flex max-w-md gap-4">
+        <Textarea id="text" name="text" placeholder="Whats on your mind?" />
         <SubmitButton successMessage="Thread shared successfully">
           Share
         </SubmitButton>
       </form>
-      <ul className="space-y-4">
+      <ul className="max-w-md space-y-4">
         {threads.map((thread) => (
           <li key={thread.id}>
             <ThreadCard thread={thread} />

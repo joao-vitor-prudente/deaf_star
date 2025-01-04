@@ -13,7 +13,7 @@ export default async function RepliesTab(props: PageProps): AsyncReactNode {
 
   return (
     <section className="py-4">
-      <ul className="flex flex-col gap-4">
+      <ul className="flex max-w-md flex-col gap-4">
         {threads.map((thread) => (
           <li key={thread.id}>
             <ThreadCard thread={thread} />
